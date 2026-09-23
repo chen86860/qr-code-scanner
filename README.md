@@ -1,5 +1,9 @@
 # QR Code Scanner
 
+[![CI](https://github.com/chen86860/qr-code-scanner/actions/workflows/ci.yml/badge.svg)](https://github.com/chen86860/qr-code-scanner/actions/workflows/ci.yml)
+
+![Select a QR code on screen, macOS Vision decodes it, and the text lands on your clipboard](media/hero.svg)
+
 A Raycast extension that scans QR codes on your screen. Select an area (or capture every display),
 and the decoded text is copied to your clipboard. URLs can optionally be opened right away.
 

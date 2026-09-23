@@ -15,9 +15,8 @@ It also runs in Raycast-compatible launchers that execute Raycast extensions.
   full Retina display decodes in under a second, with no image libraries at all (the command bundle
   is about 1 KB).
 - **Several codes at once.** Every QR / Micro QR code in the capture is copied, one per line.
-- **Survives the launcher.** Capture and decoding run in a detached helper, so the scan finishes even
-  when the launcher tears the command down as its window hides (e.g. _Pop to Root Search:
-  Immediately_).
+- **Native feedback.** Results go through Raycast's own APIs: the clipboard, a HUD, and `open`, which
+  respects each URL's registered app (deep links open in their app, not the browser).
 - **Safe URL opening.** Only `http`, `https`, `ftp` and `mailto` links, plus bare domains such as
   `example.com/path`, are ever opened; everything else is just copied.
 
@@ -32,21 +31,21 @@ It also runs in Raycast-compatible launchers that execute Raycast extensions.
 ## Permissions
 
 macOS asks for **Screen Recording** permission for your launcher the first time you scan
-(System Settings → Privacy & Security → Screen & System Audio Recording). Results are reported with
-a system notification, so allow notifications for _Script Editor_ if you want to see them.
+(System Settings → Privacy & Security → Screen & System Audio Recording).
 
 ## How it works
 
 ```
 Scan QR Code (src/scan-qr-code.ts)
-  └─ spawns, detached:  osascript -l JavaScript assets/scan-qr.js <mode> <silence> <openUrl>
-                           ├─ /usr/sbin/screencapture  (-i selection, or one file per display)
-                           ├─ VNDetectBarcodesRequest  (QR + Micro QR)
-                           └─ NSPasteboard / NSWorkspace / notification
+  ├─ osascript -l JavaScript assets/scan-qr.js <mode> <silence>
+  │    ├─ /usr/sbin/screencapture   (-i selection, or one file per display)
+  │    ├─ VNDetectBarcodesRequest   (QR + Micro QR)
+  │    └─ prints {"status":"ok","codes":[…]} | cancelled | not-found
+  └─ Clipboard.copy → open (optional) → showHUD
 ```
 
-`assets/scan-qr.js` is plain JavaScript for Automation (JXA) because `osascript` executes it
-directly. Its pure helpers are unit-tested from Node; only `run()` touches macOS.
+`assets/scan-qr.js` is JavaScript for Automation (JXA) because `osascript` executes it directly. It
+only captures and decodes; everything the user sees is TypeScript in `src/` and unit-tested.
 
 ## Development
 

@@ -50,8 +50,9 @@ function run(argv) {
 
   const displayCount = mode === "fullscreen" ? Number($.NSScreen.screens.count) : 1;
   const token = $.NSUUID.UUID.UUIDString.js;
-  const files = Array.from({ length: displayCount }, (_, index) =>
-    $.NSTemporaryDirectory().js + `qr-code-scanner-${token}-${index}.png`,
+  const files = Array.from(
+    { length: displayCount },
+    (_, index) => $.NSTemporaryDirectory().js + `qr-code-scanner-${token}-${index}.png`,
   );
 
   const task = $.NSTask.alloc.init;

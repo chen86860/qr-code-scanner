@@ -17,6 +17,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec ray build -e dist -o dist -I
-      - run: pnpm exec ray lint -I
+      # `ray lint` wants npm's package-lock.json under CI; these are the checks it runs.
+      - run: pnpm exec eslint .
+      - run: pnpm exec prettier --check .
       - run: pnpm typecheck
       - run: pnpm test
